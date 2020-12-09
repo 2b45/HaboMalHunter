@@ -1,5 +1,7 @@
 # HaboMalHunter: Habo Linux Malware Analysis System
 
+- [二开自研](./auxiliary)
+
 [![BlackHat](https://cdn.rawgit.com/toolswatch/badges/master/arsenal/2017.svg)](https://www.blackhat.com/asia-17/arsenal.html#habomalhunter-an-automated-malware-analysis-tool-for-linux-elf-files)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/Tencent/HaboMalHunter/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Tencent/HaboMalHunter/pulls)
@@ -13,111 +15,6 @@
 
 ## 参与贡献
 [腾讯开源激励计划](https://opensource.tencent.com/contribution) 鼓励开发者的参与和贡献，期待你的加入。
-
-## Introduction
-
-HaboMalHunter is a sub-project of [Habo Malware Analysis System (https://habo.qq.com)](https://habo.qq.com), which can be used for automated malware analysis and security assessment on the Linux system. The tool help security analyst extracting the static and dynamic features from malware effectively and efficiently. The generated report provides significant information about process, file I/O, network and system calls. 
-
-## Features
-
-The tool can be used for the static and dynamic analysis of ELF files on the Linux x86/x64 platform.
-
-### Static analysis
-
-1. Basic Information: md5, name, file type, size and SSDEEP.
-2. SO Files Dependency: SO files information (only applied for dynamic linked files).
-3. Strings Information.
-4. ELF Header and Entry Point.
-5. IP and PORTS
-6. ELF Segment, Section and Hash.
-7. Source File Names.
-
-### Dynamic analysis
-1. Starting and Termination: Time Stamps and Elapsed Time.
-2. Processes Information: clone, execve and exit etc.
-3. File I/O: open, read, write and delete etc.
-4. Network: TCP, UDP, HTTP and HTTPS etc.
-5. Typical Malicous Actions: self deletion, midification and lock.
-6. API Information: getpid, system, dup and other libc functions.
-7. syscall sequences.
-
-## Screenshot
-1. The HTML report.
-
-![png22](https://cloud.githubusercontent.com/assets/717403/21970024/c84605a4-dbdd-11e6-908f-a77fe0c3cc66.png)
-
-2. The JSON report.
-
-![png21](https://cloud.githubusercontent.com/assets/717403/21969936/279f3b16-dbdd-11e6-944f-5694bf41681e.png)
-
-## Demo
-### 1.Setup Enviroment
-
-The tool will run on the VirtualBox 5.1 with Ubuntu 14.04 LTS.
-
-
-in order to install thrid party software, please execute the following command after obtaining the code:
-
-```bash
-root# cd ./util/update_image
-root# bash update_image.sh
-```
-
-### 2.Get Source Code
-
-```bash
-git clone https://github.com/Tencent/HaboMalHunter.git
-```
-### 3.Compile
- 
-Firstly, please upload the source code into the VM.
-Execute the following command with root permision under the /root directory.
-
-```bash
-cp -ra /media/sf_Source/* .
-```
-
-
-![source](https://cloud.githubusercontent.com/assets/717403/21881137/90ea2d7c-d8dd-11e6-8a8d-b0341d66934d.jpg)
-
-The command will compile and package the source code, and then will generate two zip files.
-
-```bash
-bash package.sh
-```
-
-![png2](https://cloud.githubusercontent.com/assets/717403/21881200/01f37460-d8de-11e6-852f-3b48fe87b95f.png)
-
-### 4.Analysis
-
-using `./test/bin/read.32.elf` to make a test.
-The second command will copy report and log outside the VM.
-
-```
-python AnalyzeControl.py -v -l ./test/bin/read.32.elf
-cp ./log/output.zip /media/sf_Source/
-```
-
-![png3](https://cloud.githubusercontent.com/assets/717403/21881257/5b2aaf1c-d8de-11e6-8551-63c1cf8a5ad7.png)
-
-Among the result, `output.static` is static analysis result, `output.dynamic` is dynamic analysis result, and `system.log` is runtime log. Users can also upload samples to the [Habo Malware Analysis System (https://habo.qq.com)](https://habo.qq.com) to get a brief report.
-
-![png4](https://cloud.githubusercontent.com/assets/717403/21881288/a131b122-d8de-11e6-8e51-bba6c68de425.png)
-
-![habo_01](https://cloud.githubusercontent.com/assets/717403/21971564/bb280f02-dbec-11e6-813b-fab6d63798b6.png)
-
-
-## Future Work
-1. [done] Memory Analysis.
-2. More YARA rules (./utils/yara/malware/)
-3. [done] HTML output format
-
-## Errors and Issues
-1. Malware Analysis should be done inside a Virtual Machine enviroment and Intel-VT should be enabled on the host's BIOS. We shall not be liable to the damage of the analysed malware.
-2. VirtualBox 5.1 is recommended.
-3. The tool will also generate dynamic log, which contains one error message, for ELF files which can not be executed, such as so files.
-
-
 
 # <a name="readme_cn">哈勃分析系统(HaboMalHunter)</a>
 
@@ -213,3 +110,7 @@ cp ./log/output.zip /media/sf_Source/
 1. 分析病毒请在虚拟机环境下进行，并在BIOS设置中开启Intel-VT功能，对因运行病毒引起的任何软件安全问题，本项目不承担责任。
 2. 推荐使用VirtualBox 5.1以上版本运行虚拟机。
 3. 对于无法运行的ELF文件，例如so文件，哈勃分析系统默认会生成动态日志，但是里面只有无法运行的报错信息。
+
+
+## UPDRADE
+- [Docker构建](./Dockerfile)
