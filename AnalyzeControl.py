@@ -92,10 +92,7 @@ def init_cfg(cfg_path, args):
 	cfg = {}
 	# file
 	conf_parser = ConfigParser.ConfigParser()
-	print(cfg_path)
 	if os.path.exists(cfg_path):
-		print('----------------------------')
-		print('file exsit {}'.format(cfg_path))
 		conf_parser.read(cfg_path)
 	#print(conf_parser.items('main'))
 	for k,v in conf_parser.items(SECTION_DEF):
