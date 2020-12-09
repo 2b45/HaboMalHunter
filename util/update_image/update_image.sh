@@ -15,6 +15,7 @@
 #Author: 
 #Date:	August 18, 2016
 #Description: Linux Malware Analysis System : update
+# UPGRADE KVM RUN 
 
 set -x
 #check root user
@@ -22,22 +23,27 @@ if [ "$(id -u)" != "0" ]; then
 	echo "Please run as root"
 fi
 
-CFG_INSTALL_VBOX_TOOLS=0
-if [ "$CFG_INSTALL_VBOX_TOOLS" != "0" ]; then
-	#mount iso
-	mount -t auto /dev/cdrom /mnt/cdrom/
-	ls -la /mnt/cdrom/
-	/mnt/cdrom/VBoxLinuxAdditions.run
-fi
+#CFG_INSTALL_VBOX_TOOLS=0
+#if [ "$CFG_INSTALL_VBOX_TOOLS" != "0" ]; then
+#	#mount iso
+#	mount -t auto /dev/cdrom /mnt/cdrom/
+#	ls -la /mnt/cdrom/
+#	/mnt/cdrom/VBoxLinuxAdditions.run
+#fi
 
 #seting ssh root login
 #PermitRootLogin yes
+
 sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 grep 'PermitRootLogin' /etc/ssh/sshd_config
 service ssh restart
+echo "root:password" | chpasswd
+
 # set 1 to enable proxy
 CFG_Enable_Proxy=0
-PROXY_URL="__SET_YOUR_PROXY_HERE__"
+PROXY_URL="http://local.mitmproxy"
 if [ "$CFG_Enable_Proxy" -gt 0 ]; then
 	echo "enable proxy with url: ${PROXY_URL}"
 	#apt-get proxy
@@ -62,7 +68,7 @@ apt-get install -y tshark
 apt-get install -y ssldump
 apt-get install -y libcurl4-openssl-dev
 apt-get install -y auditd
-apt-get install -y php5-cli
+#apt-get install -y php5-cli
 apt-get install -y dwarfdump
 apt-get install -y linux-tools-common
 apt-get install -y linux-tools-`uname -r`
@@ -70,6 +76,23 @@ apt-get install -y linux-headers-generic
 apt-get install -y p7zip-rar
 apt-get install -y zip
 apt-get install -y volatility-tools
+
+## ADD OWN PHP5.6 
+apt-get install python python-pip python-dev python-software-properties -y 
+add-apt-repository ppa:ondrej/php
+apt-get update
+apt-get -y install php5.6-cli
+# apt-get -y install php5.6 php5.6-mcrypt php5.6-mbstring php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-xsl php5.6-zip
+
+## TIDO auto-modify-for-ubuntu-16.04
+apt-get install \
+    libc6-dev-i386 \
+    exiftool \
+    ssdeep \
+    upx \
+    clamav -y 
+
+## OWN OK 
 apt-get -y autoremove
 apt-get clean all
 
@@ -79,6 +102,7 @@ sed -i '38irunning_superuser = false' /etc/wireshark/init.lua
 
 # vol
 bash ./update_vol_profile.sh
+
 # build lime
 download_url='https://github.com/504ensicsLabs/LiME/archive/v1.7.5.zip'
 dest_path='/usr/share/LiME'
@@ -114,6 +138,7 @@ ln -s -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 date
 
 # set root password
-echo "Please change root password"
-passwd
+#echo "Please change root password"
+#passwd
+
 echo "Please poweroff"
