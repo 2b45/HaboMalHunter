@@ -19,8 +19,8 @@ import json
 import shutil
 import hashlib
 
-import VMControl
-import ConfigManager
+from . import VMControl
+from . import ConfigManager
 
 
 class DynamicBehaviors(object):

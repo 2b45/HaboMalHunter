@@ -667,12 +667,12 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			elf_sections["ID"] = metrics.S_ID_ELF_SECTIONS
 			elf_info["SECTIONS"] = elf_sections
 			# ELF segments
- 			elf_segments = {}
+			elf_segments = {}
 			elf_segments["ELF_SEGMENTS"] = self.info['elf_segments']
 			elf_segments['ID'] = metrics.S_ID_ELF_SEGMENTS
 			elf_info["SEGMENTS"] = elf_segments
 			# ELF DYNSYM
- 			elf_dynsym = {}
+			elf_dynsym = {}
 			elf_dynsym["ELF_DYNSYM"] = self.info['elf_dynsym']
 			elf_dynsym['ID'] = metrics.S_ID_ELF_DYNSYM
 			elf_info["DYNSYM"] = elf_dynsym

@@ -11,15 +11,16 @@
 # and limitations under the License.
 
 
-import ConfigParser
+from configparser import ConfigParser
 import os
+
 
 class ConfigManager:
     """Class for load config from file."""
 
     def get(self, section, key):
         """Get config from config file"""
-        config = ConfigParser.ConfigParser()
+        config = ConfigParser()
         file_root = os.path.dirname(__file__)
         path = os.path.join(file_root, 'DynamicConfig.conf')
         config.read(path)

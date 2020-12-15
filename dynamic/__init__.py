@@ -11,4 +11,4 @@ License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
 either express or implied. See the License for the specific language governing permissions 
 and limitations under the License.
 """
-from dynamic_analyzer import *
+from dynamic.dynamic_analyzer import *
