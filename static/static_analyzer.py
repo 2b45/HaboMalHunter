@@ -157,6 +157,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			self.log.info("file size_info: %d",self.info["size_info"])
 		else:
 			self.log.error("file: %s dose not exist",file_path)
+
 	def get_machinetype(self):
 		if self.info.has_key("machinetype"):
 			return self.info["machinetype"]
@@ -170,6 +171,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 				ret = self.normalise(parts[1])
 		self.info["machinetype"] = ret
 		return ret
+
 	def get_filetype(self):
 		if self.info.has_key("filetype"):
 			return self.info["filetype"]
@@ -200,7 +202,8 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			self.info["file"] = self.extract_file(self.normalise(output))
 			self.log.info("file cmd: %s",output)
 		else:
-			self.log.error("file: %s dose not exist",file_path)
+			self.log.error("file: %s dose not exist", file_path)
+
 	def extract_file(self, line):
 		parts = line.split(":")
 		ret = ""
@@ -226,7 +229,8 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			self.info["hash_ssdeep"] = self.extract_ssdeep(output)
 			self.log.info("ssdeep cmd: %s", self.info["hash_ssdeep"])
 		else:
-			self.log.error("file: %s dose not exist",file_path)
+			self.log.error("file: %s dose not exist", file_path)
+
 	def extract_ssdeep(self, line):
 		parts = line.splitlines()
 		if 1 < len(parts):
@@ -273,6 +277,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 				if 0!=len(node["SO_NAME"]):
 					ret.append(node)
 		return ret
+
 	def pick_path(self, line):
 		cut_pos = line.find("(0x")
 		ret = ""
@@ -312,7 +317,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			self.info['elf_dynsym'] = self.extract_dynsym(self.normalise(output.splitlines()))
 
 		else:
-			self.log.error("file: %s dose not exist",file_path)		
+			self.log.error("file: %s dose not exist",file_path)
 
 	def exiftool_info(self):
 		file_path = self.cfg.target_abs_path
@@ -320,7 +325,8 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			output=self.check_output_safe(['/usr/bin/exiftool', file_path])
 			self.info['exiftool_info'] = self.extract_exif(self.normalise(output.splitlines()))
 		else:
-			self.log.error("file: %s dose not exist",file_path)	
+			self.log.error("file: %s dose not exist", file_path)
+
 	def extract_exif(self, output_list):
 		ret = {}
 		for line in output_list:
@@ -540,7 +546,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 					pass
 				else:
 					cut_ind = line.find(' ',st_ind,end_pos)
-					
+
 					if -1 == cut_ind:
 						subline = line[st_ind:]
 					else:
@@ -562,13 +568,14 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			self.log.error("key: %s dose not exists in line: %s",k,line)
 		return (st_ind, end_ind)
 
-# output
+	# output
 	def output(self, fmt):
 		self.log.info("output will be generated in format: %s", fmt)
 		if "json" == fmt.lower():
 			self.output_json()
 		else:
-			self.log.error("The output format %s has not been supported",fmt)
+			self.log.error("The output format %s has not been supported", fmt)
+
 	def output_json(self):
 		self.output_json_filetype()
 		self.output_json_static()
@@ -627,7 +634,7 @@ class StaticAnalyzer(base.BaseAnalyzer):
 		size_info["ID"] = metrics.S_ID_FILE_SIZE
 		output["FileSize"].append(size_info)
 
-		#output["Import"] = [] 
+		#output["Import"] = []
 		import_info = {}
 		if self.get_filetype().startswith("ELF"):
 			import_info["Import_list"] = self.info['elf_dynsym']['imported_list']
@@ -659,17 +666,17 @@ class StaticAnalyzer(base.BaseAnalyzer):
 			elf_sections["ELF_SECTIONS"] = self.info['elf_sections']
 			elf_sections["ID"] = metrics.S_ID_ELF_SECTIONS
 			elf_info["SECTIONS"] = elf_sections
- 			# ELF segments
+			# ELF segments
  			elf_segments = {}
- 			elf_segments["ELF_SEGMENTS"] = self.info['elf_segments']
- 			elf_segments['ID'] = metrics.S_ID_ELF_SEGMENTS
- 			elf_info["SEGMENTS"] = elf_segments
- 			# ELF DYNSYM
+			elf_segments["ELF_SEGMENTS"] = self.info['elf_segments']
+			elf_segments['ID'] = metrics.S_ID_ELF_SEGMENTS
+			elf_info["SEGMENTS"] = elf_segments
+			# ELF DYNSYM
  			elf_dynsym = {}
- 			elf_dynsym["ELF_DYNSYM"] = self.info['elf_dynsym']
- 			elf_dynsym['ID'] = metrics.S_ID_ELF_DYNSYM
- 			elf_info["DYNSYM"] = elf_dynsym
- 		#TODO fix the format
+			elf_dynsym["ELF_DYNSYM"] = self.info['elf_dynsym']
+			elf_dynsym['ID'] = metrics.S_ID_ELF_DYNSYM
+			elf_info["DYNSYM"] = elf_dynsym
+		#TODO fix the format
 		#output["ELF"].append(elf_info)
 		if self.get_filetype().startswith("ELF"):
 			output["ELF_SECTIONS"] = self.output_elf_sections()
@@ -734,12 +741,13 @@ class StaticAnalyzer(base.BaseAnalyzer):
 		header["ID"] = metrics.S_ID_ELF_HEADER
 		output.append(header)
 		return output
-		
+
 	def output_elf_segments_mapping(self):
 		mapping = self.info['elf_segments']['segments_secions_mapping']
 		for node in mapping:
 			node['ID'] = metrics.S_ID_ELF_SEGMENTS_MAP
 		return mapping
+
 	def output_elf_sections(self):
 		for node in self.info['elf_sections']:
 			node["ID"] = metrics.S_ID_ELF_SECTIONS
